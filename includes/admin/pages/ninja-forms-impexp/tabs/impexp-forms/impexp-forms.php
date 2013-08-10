@@ -117,7 +117,8 @@ function ninja_forms_export_form( $form_id ){
 function ninja_forms_save_impexp_forms($data){
 	global $wpdb, $ninja_forms_admin_update_message;
 	$plugin_settings = get_option("ninja_forms_settings");
-	$form_id = $_REQUEST['form_id'];
+	
+	$form_id = isset( $_REQUEST['form_id'] ) ? $_REQUEST['form_id'] : '';
 	$update_msg = '';
 	if( $_REQUEST['submit'] == __('Export Form', 'ninja-forms') OR ( isset( $_REQUEST['export_form'] ) AND $_REQUEST['export_form'] == 1 ) ){
 		if($form_id != ''){
@@ -129,7 +130,9 @@ function ninja_forms_save_impexp_forms($data){
 		if ($_FILES['userfile']['error'] == UPLOAD_ERR_OK AND is_uploaded_file($_FILES['userfile']['tmp_name'])){
 			$file = file_get_contents($_FILES['userfile']['tmp_name']);
 			$form = unserialize( trim( $file ) );
-			$form_fields = $form['field'];
+
+
+			$form_fields = isset( $form['field'] ) ? $form['field'] : null;
 
 			unset($form['field']);
 			$form = apply_filters( 'ninja_forms_before_import_form', $form );
